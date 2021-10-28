@@ -29,8 +29,8 @@ RUN apt-get update && \
 WORKDIR /tmp
 RUN git clone -b v21.06.0 https://github.com/ovn-org/ovn.git
 RUN cd ovn && ./boot.sh && git submodule update --init
-RUN cd /tmp/ovn/ovs && ./boot.sh && ./configure && \
-    make -j4 && make install
+RUN cd /tmp/ovn/ovs && ./boot.sh && ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc && \
+    make -j4
 RUN cd ovn && ./configure --prefix=/usr --localstatedir=/var --sysconfdir=/etc && DEB_BUILD_OPTIONS='parallel=4 nocheck' fakeroot debian/rules -e OVSDIR=/tmp/ovn/ovs binary && \
     mkdir /tmp/ovn-debs && mv /tmp/*.deb /tmp/ovn-debs
 
